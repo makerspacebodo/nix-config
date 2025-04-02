@@ -1,0 +1,23 @@
+alias: lock_at_night
+description: Periodically makes sure the door is locked at night
+trigger:
+  - platform: state
+    entity_id: lock.danalock_v3_btzbe
+    from: 'locked'
+    to: 'unlocked'
+    for:
+      minutes: 5
+  - platform: time
+    at: '20:00:00'
+condition:
+  - condition: state
+    entity_id: lock.danalock_v3_btzbe
+    state: 'unlocked'
+  - condition: state
+    entity_id: binary_sensor.natt
+    state: "on"
+action:
+  - service: lock.lock
+    target:
+      entity_id: lock.danalock_v3_btzbe
+mode: single
